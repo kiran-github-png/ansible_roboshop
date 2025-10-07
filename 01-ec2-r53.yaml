@@ -6,7 +6,7 @@
     sg_id: sg-0554fc62c9a958751 # replace with your SG ID
     zone_id: "Z09644902QVXLMBTH3X1Z" # replace with your ID
     domain_name: "daws86s.blog"
-    instance:
+    instances:
     - mongodb
   tasks:
   - name: create ec2 instance
@@ -24,24 +24,4 @@
     ansible.builtin.debug:
         msg: "{{ ec2_output }}"
 
-  # - name: print public_ip
-  #   ansible.builtin.debug: 
-  #     msg: "{{ item.instances[0].public_ip_address }}"
-  #   loop: "{{ ec2_output.results }}"
-
-  # - name: print private_ip
-  #   ansible.builtin.debug: 
-  #     msg: "{{ item.instances[0].private_ip_address }}"
-  #   loop: "{{ ec2_output.results }}"
-
-  # - name: create route53 record
-  #   amazon.aws.route53:
-  #     state: present
-  #     zone: "{{ domain_name }}"
-  #     record: "{{ item.item }}.{{ domain_name }}" # mongodb.daws86s.fun
-  #     type: A
-  #     ttl: 1
-  #     value: "{{ item.instances[0].private_ip_address }}"
-  #     overwrite: true
-  #   loop: "{{ ec2_output.results }}"
-
+ 
