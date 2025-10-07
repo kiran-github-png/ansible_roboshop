@@ -9,6 +9,7 @@
 
   - name: start and enable mysql
     ansible.buildin.service:
+      name: mysql
       state: started
       enabled: yes
 
