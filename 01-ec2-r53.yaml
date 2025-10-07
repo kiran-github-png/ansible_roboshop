@@ -1,0 +1,29 @@
+- name: creating ec2 and route53
+  hosts: local
+  connection: local
+  vars: 
+    ami_id: 09c813fb71547fc4f
+    sg_id: 0554fc62c9a958751
+    zone_id: "Z09644902QVXLMBTH3X1Z"
+    domain_name: "daws86s.blog"
+    instance:
+    - mongodb
+  tasks:
+  - name: create ec2 instance
+    amazon.aws.ec2_instance:
+      name: "{{ item }}"
+      instance_type: t3.micro
+      security_group: "{{ sg_id }}"
+      image_id: "{{ ami_id }}"
+      tags:
+        Name: "{{ item }}"
+    loop: "{{ instance }}"
+    register: ec2_output
+
+  - name: print the ec2_output
+    ansible.builtin.debug:
+      msg: "{{ ec2_output }}"
+
+
+
+
