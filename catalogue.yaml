@@ -66,7 +66,7 @@
   #     msg: "{{ catalogue_output }}"
 
   - name: load products into mongodb
-    ansible.builtin.shell: mongosh --host 172.31.93.252 </app/db/master-data.js
+    ansible.builtin.shell: mongosh --host 172.31.88.225 </app/db/master-data.js
     when: catalogue_output.stdout | int < 0
 
   - name: start and enable catalogue
