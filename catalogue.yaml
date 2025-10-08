@@ -2,7 +2,7 @@
   hosts: catalogue
   become: yes
   tasks:
-  - name: disable nodejs
+  - name: disable default nodejs
     ansible.builtin.command: dnf module disable nodejs -y
 
   - name: enable nodejs 20
@@ -16,22 +16,32 @@
   - name: create roboshop system user
     ansible.builtin.user:
       name: roboshop
-      comment: Roboshop System user
+      comment: RoboShop System user
       system: true
-      shell: /sbin/nologin  
+      shell: /sbin/nologin
       home: /app
+  # Safe to remove directory, because 2nd time if we run it will download freshly. no error if does not exist
+  - name: remove app directory
+    ansible.builtin.file:
+      path: /app
+      state: absent
 
   - name: create app directory
     ansible.builtin.file:
       state: directory
       path: /app
 
-  - name: download catalogue applications
+  - name: Delete catalogue file
+    ansible.builtin.file:
+      path: /tmp/catalogue.zip
+      state: absent
+
+  - name: download catalogue application
     ansible.builtin.get_url:
       url: https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
       dest: /tmp/catalogue.zip
 
-  - name: extract catalogue applications
+  - name: extract catalogue application
     ansible.builtin.unarchive:
       src: /tmp/catalogue.zip
       dest: /app
@@ -43,6 +53,11 @@
 
   - name: copy catalogue service
     ansible.builtin.copy:
+      src: catalogue.service
+      dest: /etc/systemd/system/catalogue.service
+
+  - name: copy mongo repo
+    ansible.builtin.copy:
       src: mongo.repo
       dest: /etc/yum.repos.d/mongo.repo
 
@@ -52,21 +67,21 @@
       state: present
 
   - name: connnect to mongodb catalogue
-    ansible.builtin.command: mongosh 172.31.93.252 --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')" 
+    ansible.builtin.command: mongosh 172.31.93.252 --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')"
     register: catalogue_output
 
-  # - name: evaluate catalogue database
-  #   community.mongodb.mongodb_shell:
-  #     login_host: 172.31.93.252
-  #     eval: db.getMongo().getDBNames().indexOf('catalogue')
-  #   register: catalogue_output
+  - name: evaluate cataalogue database
+    community.mongodb.mongodb_shell:
+      login_host: mongodb.172.31.93.252
+      eval: db.getMongo().getDBNames().indexOf('catalogue')
+    register: catalogue_output
 
-  # - name: print catalogue ec2_output
-  #   ansible.builtin.debug:
-  #     msg: "{{ catalogue_output }}"
+  - name: print catalogue output
+    ansible.builtin.debug:
+      msg: "{{ catalogue_output }}"
 
   - name: load products into mongodb
-    ansible.builtin.shell: mongosh --host 172.31.88.225 </app/db/master-data.js
+    ansible.builtin.shell: mongosh --host 172.31.93.252 </app/db/master-data.js
     when: catalogue_output.stdout | int < 0
 
   - name: start and enable cataalogue
@@ -75,9 +90,10 @@
       enabled: yes
       state: started
 
-  # - name: daemon reload enable and start
-  #   ansible.builtin.systemd_service:
-  #     name: catalogue
-  #     enabled: true
-  #     state: started
-  #     daemon_reload: true
+  - name: daemon reload enable and start
+    ansible.builtin.systemd_service:
+      name: catalogue
+      enabled: true
+      state: started
+      daemon_reload: true
+  
