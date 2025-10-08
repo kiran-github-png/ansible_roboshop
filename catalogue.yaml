@@ -69,6 +69,12 @@
     ansible.builtin.shell: mongosh --host 172.31.88.225 </app/db/master-data.js
     when: catalogue_output.stdout | int < 0
 
+  - name: start and enable cataalogue
+    ansible.builtin.service:
+      name: catalogue
+      enabled: yes
+      state: started
+
   - name: daemon reload enable and start
     ansible.builtin.systemd_service:
       name: catalogue
