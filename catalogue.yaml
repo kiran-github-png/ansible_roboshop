@@ -51,8 +51,13 @@
       name: mongodb-mongosh
       state: present
 
-  - name: connnect to mongodb catalogue
-    ansible.builtin.command: mongosh 172.31.93.252 --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')"
+  # - name: connnect to mongodb catalogue
+  #   ansible.builtin.command: mongosh 172.31.93.252 --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')"
+  #   register: catalogue_output
+
+  - name: evaluate catalogue database
+    community.mongodb.mongodb_shell:
+      eval: db.getMongo().getDBNames().indexOf('catalogue')
     register: catalogue_output
 
   - name: print catalogue ec2_output
