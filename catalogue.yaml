@@ -70,7 +70,7 @@
     ansible.builtin.command: mongosh 172.31.93.252 --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')"
     register: catalogue_output
 
-  - name: evaluate cataalogue database
+  - name: evaluate catalogue database
     community.mongodb.mongodb_shell:
       login_host: mongodb.172.31.93.252
       eval: db.getMongo().getDBNames().indexOf('catalogue')
