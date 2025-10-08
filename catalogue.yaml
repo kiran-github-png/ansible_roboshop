@@ -38,7 +38,7 @@
       remote_src: yes
 
   - name: install dependencies
-    ansible.general.npm:
+    community.general.npm:
       path: /app
 
   - name: copy catalogue service
