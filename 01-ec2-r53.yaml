@@ -13,6 +13,8 @@
      - mysql
      - rabbitmq
      - catalogue
+     - cart 
+     - user
 
   tasks:
   - name: create ec2 instance
