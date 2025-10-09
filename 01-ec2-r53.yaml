@@ -45,6 +45,7 @@
     loop: "{{ ec2_output.results }}"
 
  # we are creating one record with public only for frontend
+ 
   - name: create route53 record for frontend
     amazon.aws.route53:
       state: present
