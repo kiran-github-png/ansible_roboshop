@@ -8,13 +8,13 @@
     domain_name: "daws86s.blog"
     # we can pass instances through command line using -e
     instances: 
-     - mongodb
-     - redis
-     - mysql
-     - rabbitmq
-    #  - catalogue
-    #  - cart 
-    #  - user
+    #  - mongodb
+    #  - redis
+    #  - mysql
+    #  - rabbitmq
+     - catalogue
+     - cart 
+     - user
     #  - frontend
     #  - payment
     #  - shipping 
