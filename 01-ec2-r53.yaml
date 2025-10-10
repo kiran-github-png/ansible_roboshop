@@ -12,12 +12,12 @@
     #  - redis
     #  - mysql
     #  - rabbitmq
-     - catalogue
-     - cart 
-     - user
+    #  - catalogue
+    #  - cart 
+    #  - user
     #  - frontend
-    #  - payment
-    #  - shipping 
+     - payment
+     - shipping 
 
   tasks:
   - name: create ec2 instance
